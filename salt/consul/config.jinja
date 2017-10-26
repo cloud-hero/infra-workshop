@@ -1,0 +1,24 @@
+{
+{% if grains['consul'] is defined %}
+{% if grains['consul'] == 'master' %}
+    "bootstrap_expect": 3,
+    "server": {{ salt['pillar.get']('consul:server', 'true')|lower }},
+{%- else %}
+    "server": {{ salt['pillar.get']('consul:server', 'false')|lower }},
+{% endif %}
+{% endif %}
+    "retry_join_ec2": {
+        "tag_key": "{{ salt['pillar.get']('consul:ec2_tag_key')|lower }}", 
+        "tag_value": "{{ salt['pillar.get']('consul:ec2_tag_value')|lower }}",
+        "access_key_id": "{{ salt['pillar.get']('consul:ec2_access_key_id') }}",
+        "secret_access_key": "{{ salt['pillar.get']('consul:ec2_secret_access_key') }}"
+    },
+    "advertise_addr": "{{ salt['pillar.get']('consul:advertise') }}",
+    "client_addr": "{{ salt['pillar.get']('consul:client_addr', '0.0.0.0') }}",
+    "bind_addr": "{{ salt['pillar.get']('consul:bind_addr', '0.0.0.0') }}",
+    "datacenter": "{{ salt['pillar.get']('consul:datacenter', 'ReplaceThis==') }}",
+    "data_dir": "/var/consul",
+    "encrypt": "{{ salt['pillar.get']('consul:encrypt', 'ReplaceThis==') }}",
+    "log_level": "INFO",
+    "enable_syslog": {{ salt['pillar.get']('consul:syslog', 'false') }}
+}
